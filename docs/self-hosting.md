@@ -2,9 +2,9 @@
 
 Stdio is the default. HTTP mode is for a machine you administer. It speaks Streamable HTTP at `/mcp` and answers `GET /healthz` with `{"ok":true}`.
 
-A typical layout is a Debian 12 unprivileged Proxmox LXC. Node binds to `127.0.0.1:8080`. nginx or Caddy in the same container terminates TLS and proxies the whole site. The example domain below is `tumonline-mcp.kersys.lt`. Replace it if you use another name.
+A typical layout is a Debian 12 unprivileged Proxmox LXC. Node binds to `127.0.0.1:8080`. nginx or Caddy in the same container terminates TLS and proxies the whole site. The example domain below is `tumonline-mcp.example.com`. Replace it if you use another name.
 
-Each person adds `https://tumonline-mcp.kersys.lt/mcp` in their MCP client. The client discovers OAuth, registers itself, and opens a browser on this server. The person enters a TUM ID or pastes an activated Campus token. This server stores that token encrypted for their MCP user. You do not create TUMonline accounts and you never see the token in the page or the journal.
+Each person adds `https://tumonline-mcp.example.com/mcp` in their MCP client. The client discovers OAuth, registers itself, and opens a browser on this server. The person enters a TUM ID or pastes an activated Campus token. This server stores that token encrypted for their MCP user. You do not create TUMonline accounts and you never see the token in the page or the journal.
 
 This process is its own OAuth 2.1 authorization server: protected-resource metadata, authorization-server metadata, dynamic client registration, an authorization-code flow with PKCE `S256`, rotating refresh tokens, and revocation. A static bearer remains available for an admin client that cannot do OAuth. That bearer still needs its own Campus token before personal tools work.
 
@@ -54,7 +54,7 @@ The script installs Node.js 22 from the official tarball when `node` is missing 
 
 Edit `/etc/tumonline-student-mcp.env`:
 
-- `TUMONLINE_MCP_PUBLIC_URL` is the public origin, with no path. For this host that is `https://tumonline-mcp.kersys.lt`. That value is the OAuth issuer. Forwarded headers do not change it.
+- `TUMONLINE_MCP_PUBLIC_URL` is the public origin, with no path, such as `https://tumonline-mcp.example.com`. That value is the OAuth issuer. Forwarded headers do not change it.
 - `TUMONLINE_MCP_BASE_URL` stays `https://campus.tum.de/tumonline` unless you are pointing tests at another prefix.
 - `TUMONLINE_MCP_TOKEN_KEY` is optional. If you leave it empty, the first run creates `token.key` in the state directory. Back up that file with the state directory. Losing it makes every stored Campus token unreadable.
 
@@ -64,7 +64,7 @@ Then:
 systemctl restart tumonline-student-mcp
 ```
 
-Give each person `https://tumonline-mcp.kersys.lt/mcp`.
+Give each person `https://tumonline-mcp.example.com/mcp`.
 
 The same steps by hand:
 
@@ -135,7 +135,7 @@ Failed `/mcp` authentications share one rate-limit bucket per TCP peer (30 failu
 ### Caddy
 
 ```caddy
-tumonline-mcp.kersys.lt {
+tumonline-mcp.example.com {
 	encode off
 	reverse_proxy 127.0.0.1:8080 {
 		flush_interval -1
@@ -159,10 +159,10 @@ Debian 12 ships nginx 1.22. That version has no `http2 on;` directive (added in 
 ```nginx
 server {
     listen 443 ssl http2;
-    server_name tumonline-mcp.kersys.lt;
+    server_name tumonline-mcp.example.com;
 
-    ssl_certificate     /etc/letsencrypt/live/tumonline-mcp.kersys.lt/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/tumonline-mcp.kersys.lt/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/tumonline-mcp.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/tumonline-mcp.example.com/privkey.pem;
 
     location / {
         proxy_pass http://127.0.0.1:8080;
@@ -200,7 +200,7 @@ cd /opt/tumonline-student-mcp
 exit
 ```
 
-`token create` prints the bearer once. `connect request` stores a Campus token for that bearer user and prints activation steps, not the token. The client sends `Authorization: Bearer <bearer>` to `https://tumonline-mcp.kersys.lt/mcp`. Do not put either secret in a URL.
+`token create` prints the bearer once. `connect request` stores a Campus token for that bearer user and prints activation steps, not the token. The client sends `Authorization: Bearer <bearer>` to `https://tumonline-mcp.example.com/mcp`. Do not put either secret in a URL.
 
 ## Update
 

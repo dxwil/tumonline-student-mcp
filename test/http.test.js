@@ -27,7 +27,7 @@ async function closeServer(server) {
 test("health, missing bearer, host allowlist, and origin allowlist", async () => {
   const stateDir = tempDir();
   const server = await startHttpServer({
-    env: testEnv(stateDir, { TUMONLINE_MCP_PUBLIC_URL: "https://tumonline-mcp.kersys.lt", TUMONLINE_MCP_ALLOWED_HOSTS: "tumonline-mcp.kersys.lt" }),
+    env: testEnv(stateDir, { TUMONLINE_MCP_PUBLIC_URL: "https://tumonline-mcp.example.com", TUMONLINE_MCP_ALLOWED_HOSTS: "tumonline-mcp.example.com" }),
     host: "127.0.0.1",
     port: 0,
     log: () => {},
@@ -45,7 +45,7 @@ test("health, missing bearer, host allowlist, and origin allowlist", async () =>
     assert.equal(await raw(port, { host: "evil.example" }), 403);
     const evilOrigin = await fetch(`http://127.0.0.1:${port}/healthz`, { headers: { origin: "https://evil.example" } });
     assert.equal(evilOrigin.status, 403);
-    assert.equal(await raw(port, { host: "tumonline-mcp.kersys.lt" }), 200);
+    assert.equal(await raw(port, { host: "tumonline-mcp.example.com" }), 200);
     const created = createAccessToken(stateDir, { label: "laptop" });
     const init = await fetch(`http://127.0.0.1:${port}/mcp`, {
       method: "POST",
