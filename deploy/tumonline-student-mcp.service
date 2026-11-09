@@ -1,0 +1,38 @@
+[Unit]
+Description=TUMonline student MCP server
+Documentation=file:///opt/tumonline-student-mcp/docs/self-hosting.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=tumonline-mcp
+Group=tumonline-mcp
+WorkingDirectory=/opt/tumonline-student-mcp
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=TUMONLINE_MCP_STATE_DIR=/var/lib/tumonline-student-mcp
+EnvironmentFile=/etc/tumonline-student-mcp.env
+ExecStart=/opt/tumonline-student-mcp/bin/tumonline-student-mcp --http
+StateDirectory=tumonline-student-mcp
+StateDirectoryMode=0700
+UMask=0077
+# Sandbox that starts in an unprivileged Proxmox LXC without nesting.
+# RestrictNamespaces, ProtectClock, ProtectHostname, PrivateDevices, and the
+# ProtectKernel* settings are omitted here. With nesting=1, add
+# deploy/tumonline-student-mcp.hardening.conf. See docs/self-hosting.md.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+CapabilityBoundingSet=
+AmbientCapabilities=
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

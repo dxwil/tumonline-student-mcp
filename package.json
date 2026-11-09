@@ -1,0 +1,23 @@
+{
+  "name": "tumonline-student-mcp",
+  "version": "0.1.0",
+  "description": "Unofficial multi-user MCP server for a TUM student's TUMonline data. Read-only. Tokens stay encrypted on the server.",
+  "license": "MIT",
+  "author": "dxwil",
+  "homepage": "https://github.com/dxwil/tumonline-student-mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dxwil/tumonline-student-mcp"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "tumonline-student-mcp": "./bin/tumonline-student-mcp"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js"
+  }
+}
