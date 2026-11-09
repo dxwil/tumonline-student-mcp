@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+import { main } from "../src/server.js";
+
+main().then((code) => {
+  if (typeof code === "number") {
+    process.exitCode = code;
+  }
+}).catch(() => {
+  process.stderr.write("tumonline-student-mcp failed\n");
+  process.exitCode = 1;
+});

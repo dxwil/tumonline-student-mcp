@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "tumonline-student-mcp": {
+      "command": "./bin/tumonline-student-mcp",
+      "args": [],
+      "cwd": "${CURSOR_PLUGIN_ROOT}"
+    }
+  }
+}

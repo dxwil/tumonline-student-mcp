@@ -1,0 +1,13 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "tumonline-student-mcp",
+  "version": "0.1.0",
+  "description": "Unofficial read-only TUMonline and NavigaTUM tools for a TUM student. The Campus token stays encrypted on the server.",
+  "author": {
+    "name": "dxwil"
+  },
+  "homepage": "https://github.com/dxwil/tumonline-student-mcp",
+  "repository": "https://github.com/dxwil/tumonline-student-mcp",
+  "license": "MIT",
+  "keywords": ["tumonline", "tum", "student", "campus", "mcp"]
+}
